@@ -37,21 +37,15 @@ struct LocationTrack {
     
     let locations: [CLLocation]
     
-    // This function returns the total length of the track by summing up the length
-    // of each segment.
     var totalLength: CLLocationDistance {
-        // This function is completely broken. It always returns 0. Do the right
-        // calculation by uncommenting the next four lines and doint the right summation
-        // in the body of the for loop. Then return the result of the summation instead of 0.
-        // var result: CLLocationDistance = 0
-        // let segmentSequence = SegmentSequence(locationTrack: self)
-        // for segment in segmentSequence {
-        // }
-        return 0
+        var result: CLLocationDistance = 0
+        let segmentSequence = SegmentSequence(locationTrack: self)
+        for segment in segmentSequence {
+            result += segment.start.distanceFromLocation(segment.end)
+        }
+        return result
     }
     
-    // Just so you have an example to peruse, here is a function that returns an array
-    // of the segment lengths. It will work properly once the next() function works properly.
     var segmentLengths: [CLLocationDistance] {
         var result: [CLLocationDistance] = []
         let segmentSequence = SegmentSequence(locationTrack: self)
@@ -73,16 +67,16 @@ class SegmentGenerator: GeneratorType {
         self.locationTrack = locationTrack
     }
     
-    // This function returns each segment. E.g., (locations[0], locations[1]),
-    // then (locations[1], locations[2]), (locations[2], locations[3]), et cetera.
-    // Each pair is another segment. See the definition of Segment. It's just a named tuple.
     func next() -> Segment? {
-        // The generator is completely broken. It always returns nil. Fix it.
-        // Don't change anything else! There are of course plenty of ways to get the
-        // right result. The point of this problem set is get the results using generators.
-        return nil
+        if index < locationTrack.locations.count - 1 {
+            let poop = (locationTrack.locations[index], locationTrack.locations[index+1])
+            index += 1
+            return poop
+        }
+        else {
+            return nil
+        }
     }
-
 }
 
 struct SegmentSequence: SequenceType {
